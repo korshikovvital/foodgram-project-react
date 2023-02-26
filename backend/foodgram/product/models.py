@@ -20,18 +20,6 @@ class Ingredients(models.Model):
         return f'{self.name}-{self.measurement_unit}'
 
 
-class IngredRecipe(models.Model):
-    name = models.ForeignKey(
-        Ingredients, on_delete=models.CASCADE,
-        related_name='ingreds', verbose_name='Название ингридиента'
-    )
-    recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE,
-        related_name='recipe', verbose_name='Рецепт'
-    )
-    amount = models.PositiveSmallIntegerField('Количество', max_length=120)
-
-
 class Tags(models.Model):
     """Модель тегов"""
     name = models.CharField('Имя тега', max_length=120)
@@ -63,7 +51,7 @@ class Recipe(models.Model):
         validators=[MinValueValidator(limit_value=1, message='Не менее 1')]
     )
     ingredients = models.ManyToManyField(
-        Ingredients, through=IngredRecipe, related_name='recipes'
+        Ingredients, through='IngredRecipe', related_name='recipes'
     )
 
     class Meta:
@@ -72,6 +60,18 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class IngredRecipe(models.Model):
+    name = models.ForeignKey(
+        Ingredients, on_delete=models.CASCADE,
+        related_name='ingreds', verbose_name='Название ингридиента'
+    )
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE,
+        related_name='recipe', verbose_name='Рецепт'
+    )
+    amount = models.PositiveSmallIntegerField('Количество', max_length=120)
 
 
 class Subscriptions(models.Model):
