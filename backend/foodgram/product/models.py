@@ -71,7 +71,7 @@ class IngredRecipe(models.Model):
         Recipe, on_delete=models.CASCADE,
         related_name='recipe', verbose_name='Рецепт'
     )
-    amount = models.PositiveSmallIntegerField('Количество', max_length=120)
+    amount = models.PositiveSmallIntegerField('Количество')
 
 
 class Subscriptions(models.Model):
