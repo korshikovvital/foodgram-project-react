@@ -22,8 +22,11 @@ class Ingredients(models.Model):
 
 class Tags(models.Model):
     """Модель тегов"""
-    name = models.CharField('Имя тега', max_length=120)
-    color = models.CharField('Цвет', max_length=120, help_text='RGB')
+    name = models.CharField('Имя тега', max_length=120, unique=True)
+    color = models.CharField(
+        'Цвет', max_length=120,
+        help_text='RGB', unique=True
+    )
     slug = models.SlugField('Адрес', max_length=120, unique=True)
 
     class Meta:
@@ -63,7 +66,7 @@ class Recipe(models.Model):
 
 
 class IngredRecipe(models.Model):
-    name = models.ForeignKey(
+    ingredient = models.ForeignKey(
         Ingredients, on_delete=models.CASCADE,
         related_name='ingreds', verbose_name='Название ингридиента'
     )
@@ -73,25 +76,16 @@ class IngredRecipe(models.Model):
     )
     amount = models.PositiveSmallIntegerField('Количество')
 
-
-class Subscriptions(models.Model):
-    """Подписка"""
-    author = models.ForeignKey(
-        User, on_delete=models.CASCADE,
-        verbose_name='Автор', related_name='following'
-    )
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE,
-        verbose_name='Пользователь', related_name='follow'
-    )
-
     class Meta:
-        verbose_name = 'Подписка'
-        verbose_name_plural = 'Подписки'
+        verbose_name = 'Ингредиент в рецепт'
+        verbose_name_plural = 'Ингредиенты в рецепты'
+
+    def __str__(self):
+        return f'{self.ingredient} в {self.recipe}'
 
 
 class ShoppingCart(models.Model):
-    """Список продуктов"""
+    """Список покупок"""
     user = models.ForeignKey(
         User, on_delete=models.CASCADE,
         verbose_name='Пользователь', related_name='carts'
