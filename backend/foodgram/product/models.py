@@ -7,6 +7,7 @@ User = get_user_model()
 
 class Ingredients(models.Model):
     """Модель ингредиентов"""
+
     name = models.CharField('Продукт', max_length=120)
     measurement_unit = models.CharField(
         'Единица измерения', max_length=120
@@ -22,6 +23,7 @@ class Ingredients(models.Model):
 
 class Tags(models.Model):
     """Модель тегов"""
+
     name = models.CharField('Имя тега', max_length=120, unique=True)
     color = models.CharField(
         'Цвет', max_length=120,
@@ -39,6 +41,7 @@ class Tags(models.Model):
 
 class Recipe(models.Model):
     """Модель рецетов"""
+
     author = models.ForeignKey(
         User, on_delete=models.CASCADE,
         related_name='recipes', verbose_name='Автор'
@@ -49,7 +52,7 @@ class Recipe(models.Model):
     )
     image = models.ImageField('Картинка', upload_to='media/')
     text = models.TextField('Описание')
-    cooking_time = models.IntegerField(
+    cooking_time = models.PositiveSmallIntegerField(
         'Время приготовления',
         validators=[MinValueValidator(limit_value=1, message='Не менее 1')]
     )
@@ -86,6 +89,7 @@ class IngredRecipe(models.Model):
 
 class ShoppingCart(models.Model):
     """Список покупок"""
+
     user = models.ForeignKey(
         User, on_delete=models.CASCADE,
         verbose_name='Пользователь', related_name='carts'
@@ -99,9 +103,13 @@ class ShoppingCart(models.Model):
         verbose_name = 'Список покупки'
         verbose_name_plural = 'Список покупок'
 
+    def __str__(self):
+        return f'{self.recipe}-->{self.user}'
+
 
 class Favorite(models.Model):
     """Избранные рецепты"""
+
     user = models.ForeignKey(
         User, on_delete=models.CASCADE,
         verbose_name='Пользователь', related_name='favorit'
@@ -112,5 +120,9 @@ class Favorite(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Избраный'
-        verbose_name_plural = 'Избранные'
+        verbose_name = 'Избраный  рецепт'
+        verbose_name_plural = 'Избранные рецепты'
+
+    def __str__(self):
+        return f'{self.recipe}-->{self.user}'
+

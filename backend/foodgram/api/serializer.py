@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
+from django.core.validators import RegexValidator
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer, UserCreateSerializer
 from rest_framework.validators import UniqueValidator
@@ -36,7 +37,19 @@ class UserSerializer(UserSerializer):
 class UserCreateSerializer(UserCreateSerializer):
     """Создание нового пользователя"""
     email = serializers.EmailField(
-        validators=[UniqueValidator(queryset=User.objects.all())]
+        validators=[
+            UniqueValidator(queryset=User.objects.all()),
+            RegexValidator(
+                r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+            'Invalid email format')
+                    ]
+    )
+    username=serializers.CharField(
+        validators=[
+            RegexValidator(
+                r"^[a-zA-Z0-9]+$",
+                'Invalid username format')
+        ]
     )
 
     class Meta:
@@ -48,6 +61,7 @@ class UserCreateSerializer(UserCreateSerializer):
             'email': {'required': True, 'allow_blank': False},
             'username': {'required': True, 'allow_blank': False}
         }
+
 
 
 class SetPassword(serializers.Serializer):

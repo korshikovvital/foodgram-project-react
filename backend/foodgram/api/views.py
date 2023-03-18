@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status, exceptions
+from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import (
@@ -24,6 +24,7 @@ from product.models import (
     Favorite, ShoppingCart, IngredRecipe
 
 )
+from .utilis import add_delete_fun
 from users.models import Subscriptions
 
 
@@ -57,13 +58,10 @@ class UserViewSets(UserViewSet):
         user = get_object_or_404(User, username=request.user)
         author = get_object_or_404(User, pk=pk)
         if request.method == 'POST':
-            if author == user:
-                raise exceptions.ValidationError('Нельзя подписаться на себя')
-            if Subscriptions.objects.filter(user=user, author=author).exists():
-                raise exceptions.ValidationError('Уже подписан на автора')
             serializer = SubscriptionsSerializer(author)
             Subscriptions.objects.create(user=user, author=author)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
         Subscriptions.objects.filter(user=user, author=author).delete()
         return Response({'detail': 'Успешная отписка'},
                         status=status.HTTP_204_NO_CONTENT)
@@ -83,21 +81,13 @@ class TagsViewSets(viewsets.ReadOnlyModelViewSet):
     filterset_fields = ('name',)
 
 
-def add_delete_fun(request, pk, model):
-    recipe = get_object_or_404(Recipe, id=pk)
-    user = get_object_or_404(User, username=request.user)
-    if request.method == 'POST':
-        model.objects.create(user=user, recipe=recipe)
-        serializer = RecipeminSerializer(recipe)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    instance = model.objects.filter(user=user, recipe=recipe)
-    instance.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 class RecipeViewSets(viewsets.ModelViewSet):
-    queryset = Recipe.objects.all()
+    queryset = Recipe.objects.select_related('author').all()
     serializer_class = [IsAuthenticatedOrReadOnly]
+
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
