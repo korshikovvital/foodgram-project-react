@@ -41,10 +41,10 @@ class UserCreateSerializer(UserCreateSerializer):
             UniqueValidator(queryset=User.objects.all()),
             RegexValidator(
                 r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-            'Invalid email format')
-                    ]
+                'Invalid email format')
+        ]
     )
-    username=serializers.CharField(
+    username = serializers.CharField(
         validators=[
             RegexValidator(
                 r"^[a-zA-Z0-9]+$",
@@ -61,7 +61,6 @@ class UserCreateSerializer(UserCreateSerializer):
             'email': {'required': True, 'allow_blank': False},
             'username': {'required': True, 'allow_blank': False}
         }
-
 
 
 class SetPassword(serializers.Serializer):

@@ -15,7 +15,6 @@ from api.serializer import (
     RecipeCreateSerializer,
     UserSerializer,
     UserCreateSerializer,
-    RecipeminSerializer,
     SetPassword,
     SubscriptionsSerializer
 )
@@ -81,13 +80,9 @@ class TagsViewSets(viewsets.ReadOnlyModelViewSet):
     filterset_fields = ('name',)
 
 
-
-
-
 class RecipeViewSets(viewsets.ModelViewSet):
     queryset = Recipe.objects.select_related('author').all()
     serializer_class = [IsAuthenticatedOrReadOnly]
-
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
