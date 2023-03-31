@@ -8,13 +8,12 @@ from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from users.models import Subscriptions
+from product.models import (Favorite, Ingredients, IngredRecipe, Recipe,
+                            ShoppingCart, Tags, User)
 from api.serializer import (IngredientsSerializer, RecipeCreateSerializer,
                             RecipeSerializer, SetPassword,
                             SubscriptionsSerializer, TagsSerializer,
                             UserCreateSerializer, UserSerializer)
-from product.models import (Favorite, Ingredients, IngredRecipe, Recipe,
-                            ShoppingCart, Tags, User)
-
 
 from .utilis import add_delete_fun
 
