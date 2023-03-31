@@ -1,17 +1,13 @@
-from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 from django.core.validators import RegexValidator
 from django.shortcuts import get_object_or_404
-from djoser.serializers import UserSerializer, UserCreateSerializer
-from rest_framework.validators import UniqueValidator
+from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
-from product.models import (
-    Ingredients, Tags, Recipe,
-    User, ShoppingCart, Favorite,
-    IngredRecipe
-)
-
+from product.models import (Favorite, Ingredients, IngredRecipe, Recipe,
+                            ShoppingCart, Tags, User)
+from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from users.models import Subscriptions
 
 
