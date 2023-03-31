@@ -7,7 +7,6 @@ from rest_framework.decorators import action
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
-
 from api.serializer import (IngredientsSerializer, RecipeCreateSerializer,
                             RecipeSerializer, SetPassword,
                             SubscriptionsSerializer, TagsSerializer,
