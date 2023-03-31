@@ -2,19 +2,19 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
-from product.models import (Favorite, Ingredients, IngredRecipe, Recipe,
-                            ShoppingCart, Tags, User)
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
-from users.models import Subscriptions
 
 from api.serializer import (IngredientsSerializer, RecipeCreateSerializer,
                             RecipeSerializer, SetPassword,
                             SubscriptionsSerializer, TagsSerializer,
                             UserCreateSerializer, UserSerializer)
+from product.models import (Favorite, Ingredients, IngredRecipe, Recipe,
+                            ShoppingCart, Tags, User)
+from users.models import Subscriptions
 
 from .utilis import add_delete_fun
 
