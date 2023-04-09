@@ -10,7 +10,9 @@ services:
       - ./.env
 
   backend:
-    image: korshikovvitaly/foodgram:latest
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
     restart: always
     volumes:
       - static_value:/app/static/
@@ -22,7 +24,9 @@ services:
 
 
   frontend:
-    image: korshikovvitaly/front:latest
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
     volumes:
       - ../frontend/:/app/result_build/
 
