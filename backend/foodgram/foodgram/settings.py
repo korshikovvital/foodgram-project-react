@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'djoser',
     'django_filters',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
