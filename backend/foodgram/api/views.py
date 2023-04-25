@@ -23,6 +23,7 @@ class UserViewSets(UserViewSet):
     queryset = User.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
             return UserSerializer
@@ -57,24 +58,37 @@ class UserViewSets(UserViewSet):
         return Response({'detail': 'Успешная отписка'},
                         status=status.HTTP_204_NO_CONTENT)
 
-
 class IngredientsViewSets(viewsets.ModelViewSet):
     queryset = Ingredients.objects.all()
     serializer_class = IngredientsSerializer
     pagination_class = None
 
-
+class SubscriptionsViewSets(viewsets.ReadOnlyModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = SubscriptionsSerializer
+    def get_queryset(self):
+        user = get_object_or_404(User, username=self.request.user)
+        subscribes = Subscriptions.objects.filter(user=user).values('author')
+        return User.objects.filter(pk__in=subscribes)
 class TagsViewSets(viewsets.ReadOnlyModelViewSet):
     queryset = Tags.objects.all()
     serializer_class = TagsSerializer
     filter_backends = (DjangoFilterBackend,)
     pagination_class = None
-    filterset_fields = ('name',)
+    filterset_fields = ('id',)
 
 
 class RecipeViewSets(viewsets.ModelViewSet):
     queryset = Recipe.objects.select_related('author').all()
-    serializer_class = [IsAuthenticatedOrReadOnly]
+
+
+    def get_queryset(self):
+        querset =Recipe.objects.all()
+        tags = self.request.query_params.get('tags')
+        if tags is not None:
+            querset=querset.filter(tags__slug=tags)
+        return querset
+
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):

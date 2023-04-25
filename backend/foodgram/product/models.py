@@ -1,8 +1,8 @@
-from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
+from users.models import User
 
-User = get_user_model()
+
 
 
 class Ingredients(models.Model):
@@ -53,7 +53,7 @@ class Recipe(models.Model):
     image = models.ImageField('Картинка', upload_to='media/')
     text = models.TextField('Описание')
     cooking_time = models.PositiveSmallIntegerField(
-        'Время приготовления',
+        'Время',
         validators=[MinValueValidator(limit_value=1, message='Не менее 1')]
     )
     ingredients = models.ManyToManyField(
