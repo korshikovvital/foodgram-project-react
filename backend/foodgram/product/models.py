@@ -3,8 +3,6 @@ from django.db import models
 from users.models import User
 
 
-
-
 class Ingredients(models.Model):
     """Модель ингредиентов"""
 
