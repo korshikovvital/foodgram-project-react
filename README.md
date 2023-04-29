@@ -8,6 +8,7 @@
 <<https://github.com/korshikovvital/foodgram-project-react.git>>
 
 IP: 158.160.27.5
+admin 'vit' password '1234'
 
 
 Создать и активировать виртуальное окружение:
