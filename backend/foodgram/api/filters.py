@@ -1,5 +1,4 @@
 from django_filters.rest_framework import FilterSet, filters
-
 from product.models import Recipe, Tags
 
 
