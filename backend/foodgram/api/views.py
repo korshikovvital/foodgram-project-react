@@ -90,9 +90,9 @@ class RecipeViewSets(viewsets.ModelViewSet):
 
     def get_queryset(self):
         querset = Recipe.objects.all()
-        tags = self.request.query_params.get('tags')
+        tags = self.request.query_params.getlist('tags')
         if tags is not None:
-            return querset.filter(tags__slug=tags)
+            return querset.filter(tags__slug__in=tags)
         return querset
 
     def get_serializer_class(self):
