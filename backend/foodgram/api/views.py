@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
@@ -15,6 +15,7 @@ from api.serializer import (IngredientsSerializer, RecipeCreateSerializer,
 from product.models import (Favorite, Ingredients, IngredRecipe, Recipe,
                             ShoppingCart, Tags, User)
 from users.models import Subscriptions
+from .filters import IngredientSearchFilter
 
 from .utilis import add_delete_fun
 
@@ -61,7 +62,9 @@ class UserViewSets(UserViewSet):
 class IngredientsViewSets(viewsets.ModelViewSet):
     queryset = Ingredients.objects.all()
     serializer_class = IngredientsSerializer
+    filter_backends = (IngredientSearchFilter,)
     pagination_class = None
+    search_fields = ('^name',)
 
 
 class SubscriptionsViewSets(viewsets.ReadOnlyModelViewSet):
