@@ -15,7 +15,8 @@ from api.serializer import (IngredientsSerializer, RecipeCreateSerializer,
 from product.models import (Favorite, Ingredients, IngredRecipe, Recipe,
                             ShoppingCart, Tags, User)
 from users.models import Subscriptions
-from .filters import IngredientSearchFilter
+from .filters import RecipeFilter
+from rest_framework.filters import SearchFilter
 
 from .utilis import add_delete_fun
 
@@ -59,6 +60,10 @@ class UserViewSets(UserViewSet):
                         status=status.HTTP_204_NO_CONTENT)
 
 
+class IngredientSearchFilter(SearchFilter):
+    search_param = 'name'
+
+
 class IngredientsViewSets(viewsets.ModelViewSet):
     queryset = Ingredients.objects.all()
     serializer_class = IngredientsSerializer
@@ -87,13 +92,8 @@ class TagsViewSets(viewsets.ReadOnlyModelViewSet):
 
 class RecipeViewSets(viewsets.ModelViewSet):
     queryset = Recipe.objects.select_related('author').all()
-
-    def get_queryset(self):
-        querset = Recipe.objects.all()
-        tags = self.request.query_params.getlist('tags')
-        if tags is not None:
-            return querset.filter(tags__slug__in=tags)
-        return querset
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = RecipeFilter
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
