@@ -6,7 +6,7 @@
 
 Клонировать репозиторий и перейти в папку backend:
 <<https://github.com/korshikovvital/foodgram-project-react.git>>
-
+IP: 158.160.27.5
 Создать и активировать виртуальное окружение:
 
 `python -m venv venv
