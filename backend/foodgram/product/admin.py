@@ -16,6 +16,7 @@ class IngredientsAdmin(admin.ModelAdmin):
 
 class IngredientsInline(admin.TabularInline):
     model = IngredRecipe
+    min_num = 1
 
 
 class RecipeAdmin(admin.ModelAdmin):

@@ -25,9 +25,8 @@ class UserSerializer(UserSerializer):
 
     def get_is_subscribed(self, obj):
         user = self.context.get('request').user
-        if user.is_anonymous:
-            return False
-        return Subscriptions.objects.filter(user=user, author=obj.id).exists()
+        if not user.is_anonymous:
+            return Subscriptions.objects.filter(user=user, author=obj.id).exists()
 
 
 class UserCreateSerializer(UserCreateSerializer):
@@ -51,12 +50,6 @@ class UserCreateSerializer(UserCreateSerializer):
     class Meta:
         model = User
         fields = ['email', 'username', 'first_name', 'last_name', 'password']
-        extra_kwargs = {
-            'first_name': {'required': True, 'allow_blank': False},
-            'last_name': {'required': True, 'allow_blank': False},
-            'email': {'required': True, 'allow_blank': False},
-            'username': {'required': True, 'allow_blank': False}
-        }
 
 
 class SetPassword(serializers.Serializer):
@@ -74,7 +67,7 @@ class SetPassword(serializers.Serializer):
     def update(self, instance, validated_data):
         if not instance.check_password(validated_data['current_password']):
             raise serializers.ValidationError(
-                {'current_password': 'Неправильный пароль.'}
+                {'current_password': 'Пароли должны совпадать'}
             )
         if (validated_data['current_password']
                 == validated_data['new_password']):
@@ -230,16 +223,12 @@ class SubscriptionsSerializer(serializers.ModelSerializer):
         ]
 
     def get_is_subscribed(self, obj):
-        if self.context:
-            username = self.context['request'].user
-            if not username.is_authenticated or obj.username == username:
-                return False
-            user = get_object_or_404(User, username=username)
-            author = get_object_or_404(User, username=obj.username)
-            return Subscriptions.objects.filter(
-                user=user, author=author
-            ).exists()
-        return True
+        user = get_object_or_404(User, username=obj.username)
+        author = get_object_or_404(User, username=obj.username)
+        return Subscriptions.objects.filter(
+            user=user,
+            author=author
+        ).exists()
 
     def get_recipes_count(self, obj):
         return obj.recipes.count()

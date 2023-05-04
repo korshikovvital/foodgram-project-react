@@ -18,12 +18,12 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=150, verbose_name='Фамилие')
     password = models.CharField(max_length=150, verbose_name='Пароль')
 
-    def __str__(self):
-        return f'{self.username}'
-
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
+    def __str__(self):
+        return f'{self.username}'
 
 
 class Subscriptions(models.Model):
@@ -40,3 +40,6 @@ class Subscriptions(models.Model):
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
+
+    def __str__(self):
+        return f'{self.user} - {self.author}'

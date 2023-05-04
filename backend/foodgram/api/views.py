@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+from django.core.validators import ValidationError
 from djoser.views import UserViewSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
@@ -52,8 +53,10 @@ class UserViewSets(UserViewSet):
         author = get_object_or_404(User, pk=pk)
         if request.method == 'POST':
             serializer = SubscriptionsSerializer(author)
-            Subscriptions.objects.create(user=user, author=author)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            if user != author:
+                Subscriptions.objects.create(user=user, author=author)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            raise ValidationError('Нельзя подписаться на самого себя')
 
         Subscriptions.objects.filter(user=user, author=author).delete()
         return Response({'detail': 'Успешная отписка'},
@@ -73,7 +76,6 @@ class IngredientsViewSets(viewsets.ModelViewSet):
 
 
 class SubscriptionsViewSets(viewsets.ReadOnlyModelViewSet):
-    queryset = User.objects.all()
     serializer_class = SubscriptionsSerializer
 
     def get_queryset(self):
@@ -91,7 +93,9 @@ class TagsViewSets(viewsets.ReadOnlyModelViewSet):
 
 
 class RecipeViewSets(viewsets.ModelViewSet):
-    queryset = Recipe.objects.select_related('author').all()
+    queryset = Recipe.objects.select_related(
+        'author'
+    ).prefetch_related('tags', 'ingredients').all()
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 
