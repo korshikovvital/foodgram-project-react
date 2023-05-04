@@ -55,7 +55,9 @@ class UserViewSets(UserViewSet):
             serializer = SubscriptionsSerializer(author)
             if user != author:
                 Subscriptions.objects.create(user=user, author=author)
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response(
+                    serializer.data, status=status.HTTP_201_CREATED
+                )
             raise ValidationError('Нельзя подписаться на самого себя')
 
         Subscriptions.objects.filter(user=user, author=author).delete()
