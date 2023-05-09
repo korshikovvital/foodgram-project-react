@@ -7,7 +7,7 @@
 Клонировать репозиторий и перейти в папку backend:
 <<https://github.com/korshikovvital/foodgram-project-react.git>>
 
-IP: 51.250.96.95
+IP: 62.84.123.253
 admin 'vit' password '1234'
 
 
