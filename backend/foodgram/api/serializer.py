@@ -135,7 +135,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if not request:
             return False
-        return Favorite.objects.filter(recipe=obj,user=request.user).exists()
+        return Favorite.objects.filter(recipe=obj, user=request.user).exists()
 
     def get_is_in_shopping_cart(self, obj):
         return ShoppingCart.objects.filter(recipe=obj).exists()
