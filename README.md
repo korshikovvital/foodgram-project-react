@@ -32,6 +32,7 @@ python manage.py migrate`
 
 Стек технологий
 Python 3, Django 2.2, Django REST framework, PostgreSQL, Djoser
+CI/CD
 
 
 Автор проекта:
