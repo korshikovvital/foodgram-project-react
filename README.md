@@ -39,4 +39,4 @@ CI/CD, nginx, Docker.
 Коршиков Виталий 
 Контакты
 Телеграм https://t.me/korshikovvitaly
-Телефон +7 962 7193514
+
